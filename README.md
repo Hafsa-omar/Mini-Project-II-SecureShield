@@ -164,8 +164,8 @@ This means even if two users have the same password, their hashes will be comple
 Example:
 | User | Password | Salt | Final Hash |
 |------|----------|------|------------|
-| alice | pass123 | xK9m | `$2b$12$xK9m...abc` |
-| bob | pass123 | pL2z | `$2b$12$pL2z...xyz` |
+| h123 | 12356 | xK9m | `$2b$12$xK9m...abc` |
+| admin1 | admin123 | pL2z | `$2b$12$pL2z...xyz` |
 
 The attacker's Rainbow Table becomes useless because it doesn't have entries for salted combinations.  
 `bcrypt` automatically generates a unique salt for every password, making Rainbow Table attacks impossible.
