@@ -114,6 +114,19 @@
   <div class="box info" id="lo-out">Response will appear here...</div>
 </div>
 
+<!-- ═══ 5b. ADMIN ACTION TEST ══════════════════════════════════ -->
+<div class="step">
+  <h2>5. Admin Action Test</h2>
+  <p>
+    Login as <strong>admin1</strong> first, then enter a user ID to delete.<br>
+    Admin gets <strong style="color:green">200 Success</strong> — compared to regular user who gets <strong style="color:red">403 Forbidden</strong>.
+  </p>
+  <label>User ID to delete (as Admin)</label>
+  <input id="admin-delete-id" type="number" placeholder="e.g. 2" />
+  <button class="green" onclick="doAdminDelete()">Admin Delete User</button>
+  <div class="box info" id="admin-delete-out">Login as admin1 first, then click.</div>
+</div>
+
 <!-- ═══ 6. TAMPER TEST ════════════════════════════════════════ -->
 <div class="step">
   <h2>6. Tamper Test</h2>
@@ -194,6 +207,16 @@
     setOut("lo-out", data, status);
     token = "";
     updateTokenBar();
+  }
+
+  async function doAdminDelete() {
+    const id = document.getElementById("admin-delete-id").value;
+    if (!token) {
+      document.getElementById("admin-delete-out").textContent = "Please login as admin1 first!";
+      return;
+    }
+    const { data, status } = await call("DELETE", `/user/${id}`, null, token);
+    setOut("admin-delete-out", data, status);
   }
 
   async function doAutoTamper() {
