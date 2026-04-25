@@ -1,0 +1,16 @@
+# Database
+users.db
+
+# Security log (optional - remove this line if you want to include it)
+security.log
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+env/
+
+# VS Code
+.vscode/

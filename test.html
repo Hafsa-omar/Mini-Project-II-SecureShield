@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>SecureShield — API Tester</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 750px;
+      margin: 30px auto;
+      background: #f0f2f5;
+      padding: 0 20px;
+    }
+    h1  { color: #2c3e50; text-align: center; }
+    h2  { color: #34495e; border-left: 4px solid #3498db;
+          padding-left: 10px; margin-top: 35px; }
+    p   { color: #666; font-size: 14px; }
+
+    label { font-weight: bold; font-size: 13px; color: #333; }
+    input, select {
+      display: block; width: 100%; padding: 9px 12px;
+      margin: 5px 0 14px; border: 1px solid #ccc;
+      border-radius: 6px; font-size: 14px;
+    }
+
+    button {
+      padding: 10px 22px; border: none; border-radius: 6px;
+      font-size: 14px; cursor: pointer; color: white; margin-top: 4px;
+    }
+    .green  { background: #27ae60; }
+    .blue   { background: #2980b9; }
+    .red    { background: #e74c3c; }
+    button:hover { opacity: 0.85; }
+
+    .box {
+      margin-top: 14px; padding: 14px; border-radius: 6px;
+      font-family: monospace; font-size: 13px;
+      white-space: pre-wrap; word-break: break-all;
+    }
+    .success { background: #1e272e; color: #2ecc71; }
+    .error   { background: #1e272e; color: #e74c3c; }
+    .info    { background: #1e272e; color: #f1c40f; }
+
+    .token-bar {
+      background: #fff3cd; border: 1px solid #f0ad4e;
+      padding: 12px; border-radius: 6px;
+      font-size: 12px; word-break: break-all;
+      margin-bottom: 10px;
+    }
+    .step {
+      background: white; border-radius: 8px;
+      padding: 20px; margin-bottom: 20px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    }
+  </style>
+</head>
+<body>
+
+<h1>🛡️ SecureShield API Tester</h1>
+<p style="text-align:center">Open this page at <strong>http://127.0.0.1:5000</strong> — not from the file system.</p>
+
+<div class="token-bar" id="token-bar">🔑 No token yet — log in first.</div>
+
+<!-- ═══ 1. REGISTER ═══════════════════════════════════════════ -->
+<div class="step">
+  <h2>1. Register</h2>
+  <label>Username</label>
+  <input id="r-user" placeholder="e.g. alice" />
+  <label>Password</label>
+  <input id="r-pass" type="password" placeholder="e.g. pass123" />
+  <label>Role</label>
+  <select id="r-role">
+    <option value="user">user</option>
+    <option value="admin">admin</option>
+  </select>
+  <button class="green" onclick="doRegister()">Register</button>
+  <div class="box info" id="r-out">Response will appear here...</div>
+</div>
+
+<!-- ═══ 2. LOGIN ══════════════════════════════════════════════ -->
+<div class="step">
+  <h2>2. Login</h2>
+  <label>Username</label>
+  <input id="l-user" placeholder="e.g. alice" />
+  <label>Password</label>
+  <input id="l-pass" type="password" placeholder="e.g. pass123" />
+  <button class="blue" onclick="doLogin()">Login &amp; Get Token</button>
+  <div class="box info" id="l-out">Response will appear here...</div>
+</div>
+
+<!-- ═══ 3. PROFILE ════════════════════════════════════════════ -->
+<div class="step">
+  <h2>3. View Profile <small>(login required)</small></h2>
+  <p>Uses the token from your last login automatically.</p>
+  <button class="blue" onclick="doProfile()">Get My Profile</button>
+  <div class="box info" id="p-out">Response will appear here...</div>
+</div>
+
+<!-- ═══ 4. DELETE USER ════════════════════════════════════════ -->
+<div class="step">
+  <h2>4. Delete User <small>(admin only)</small></h2>
+  <label>User ID to delete</label>
+  <input id="d-id" type="number" placeholder="e.g. 1" />
+  <button class="red" onclick="doDelete()">Delete User</button>
+  <div class="box info" id="d-out">Response will appear here...</div>
+</div>
+
+<!-- ═══ 5. LOGOUT ═════════════════════════════════════════════ -->
+<div class="step">
+  <h2>5. Logout</h2>
+  <p>Revokes your token so it can't be used again.</p>
+  <button class="red" onclick="doLogout()">Logout</button>
+  <div class="box info" id="lo-out">Response will appear here...</div>
+</div>
+
+<script>
+  const BASE  = "";   // empty = same server, avoids CORS
+  let   token = "";
+
+  function setOut(id, data, status) {
+    const el  = document.getElementById(id);
+    const ok  = status >= 200 && status < 300;
+    el.className = "box " + (ok ? "success" : "error");
+    el.textContent = `Status: ${status}\n${JSON.stringify(data, null, 2)}`;
+  }
+
+  function updateTokenBar() {
+    const bar = document.getElementById("token-bar");
+    bar.textContent = token
+      ? "🔑 Token saved:\n" + token
+      : "🔑 No token yet — log in first.";
+  }
+
+  async function call(method, path, body, tok) {
+    const headers = { "Content-Type": "application/json" };
+    if (tok) headers["Authorization"] = "Bearer " + tok;
+    try {
+      const res  = await fetch(BASE + path, {
+        method,
+        headers,
+        body: body ? JSON.stringify(body) : undefined
+      });
+      const data = await res.json();
+      return { data, status: res.status };
+    } catch (err) {
+      return { data: { error: err.message }, status: 0 };
+    }
+  }
+
+  async function doRegister() {
+    const { data, status } = await call("POST", "/register", {
+      username: document.getElementById("r-user").value,
+      password: document.getElementById("r-pass").value,
+      role:     document.getElementById("r-role").value
+    });
+    setOut("r-out", data, status);
+  }
+
+  async function doLogin() {
+    const { data, status } = await call("POST", "/login", {
+      username: document.getElementById("l-user").value,
+      password: document.getElementById("l-pass").value
+    });
+    if (data.token) { token = data.token; updateTokenBar(); }
+    setOut("l-out", data, status);
+  }
+
+  async function doProfile() {
+    const { data, status } = await call("GET", "/profile", null, token);
+    setOut("p-out", data, status);
+  }
+
+  async function doDelete() {
+    const id = document.getElementById("d-id").value;
+    const { data, status } = await call("DELETE", `/user/${id}`, null, token);
+    setOut("d-out", data, status);
+  }
+
+  async function doLogout() {
+    const { data, status } = await call("POST", "/logout", null, token);
+    setOut("lo-out", data, status);
+    token = "";
+    updateTokenBar();
+  }
+</script>
+
+</body>
+</html>
