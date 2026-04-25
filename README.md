@@ -6,11 +6,9 @@ A secure Python Flask API that uses **JWT tokens** and **Role-Based Access Contr
 
 ## Team Members
 
-| Name | Student ID |
-|------|-----------|
-| Fadumo Jamal Salad | 210208954 |
-| Hafsa Omar Ismail Samatar | 210208735 |
-| Sabreen Elmi Aidarus Gure | 210208856 |
+- Fadumo Jamal Salad — 210208954
+- Hafsa Omar Ismail Samatar — 210208735
+- Sabreen Elmi Aidarus Gure — 210208856
 
 ---
 
