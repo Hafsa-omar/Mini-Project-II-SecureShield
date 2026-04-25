@@ -116,17 +116,13 @@
 
 <!-- ═══ 6. TAMPER TEST ════════════════════════════════════════ -->
 <div class="step">
-  <h2>6. Tamper Test (JWT.io)</h2>
+  <h2>6. Tamper Test</h2>
   <p>
-    <strong>How to tamper:</strong><br>
-    1. Login above and copy your token from the yellow box.<br>
-    2. Go to <strong>jwt.io</strong>, paste the token, change <code>"role": "user"</code> to <code>"role": "admin"</code>.<br>
-    3. Copy the new token from jwt.io and paste it below.<br>
-    4. Click Send — the server will reject it because the signature is invalid.
+    This test proves that even if someone changes their role from <strong>user → admin</strong>
+    inside the token, the server will <strong>reject it</strong> because the signature becomes invalid.
   </p>
-  <label>Paste tampered token here</label>
-  <input id="tamper-token" placeholder="Paste your tampered JWT token here..." />
-  <button class="red" onclick="doTamper()">Send Tampered Token</button>
+  <p>Make sure you are logged in as <strong>h123 (user)</strong> first, then click the button below.</p>
+  <button class="red" onclick="doAutoTamper()">Auto Tamper My Token (Change role to admin)</button>
   <div class="box info" id="tamper-out">Should return 401 — Invalid token. Signature check failed.</div>
 </div>
 
@@ -200,9 +196,35 @@
     updateTokenBar();
   }
 
-  async function doTamper() {
-    const tok = document.getElementById("tamper-token").value.trim();
-    const { data, status } = await call("DELETE", "/user/1", null, tok);
+  async function doAutoTamper() {
+    if (!token) {
+      document.getElementById("tamper-out").textContent = "Please login as h123 (user) first!";
+      return;
+    }
+
+    // Split token into 3 parts: header . payload . signature
+    const parts = token.split(".");
+
+    // Decode the payload (middle part) from Base64
+    const decoded = JSON.parse(atob(parts[1]));
+
+    // Show original role before tampering
+    console.log("Original role:", decoded.role);
+
+    // TAMPER: change role to admin
+    decoded.role = "admin";
+
+    // Re-encode the payload with the fake role
+    const tamperedPayload = btoa(JSON.stringify(decoded)).replace(/=/g, "");
+
+    // Build tampered token — same header + tampered payload + original signature
+    // The signature no longer matches the new payload, so server will reject it
+    const tamperedToken = parts[0] + "." + tamperedPayload + "." + parts[2];
+
+    console.log("Tampered token sent:", tamperedToken);
+
+    // Send the tampered token to the server
+    const { data, status } = await call("DELETE", "/user/1", null, tamperedToken);
     setOut("tamper-out", data, status);
   }
 </script>
