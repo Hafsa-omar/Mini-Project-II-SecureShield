@@ -88,7 +88,7 @@ When a user logs in successfully, the server generates a **signed JWT token** co
 
 ```python
 token = jwt.encode(
-    {"username": "alice", "role": "user", "exp": <1 hour from now>},
+    {"username": "h123", "role": "user", "exp": <1 hour from now>},
     SECRET_KEY,
     algorithm="HS256"
 )
@@ -144,7 +144,7 @@ A middleware logs every security event to `security.log` including:
 
 Example log entries:
 ```
-2026-04-25 16:22:49 | 401 FAILED LOGIN   | Username='alice' | IP: 127.0.0.1
+2026-04-25 16:22:49 | 401 FAILED LOGIN   | Username='h123' | IP: 127.0.0.1
 2026-04-25 16:22:49 | 401 REVOKED TOKEN  | Tried: GET /profile
 2026-04-25 16:22:49 | 403 FORBIDDEN      | User='h123' Role='user' | Tried: DELETE /user/1
 ```
@@ -183,7 +183,7 @@ Header.Payload.Signature
 
 Decoding the payload reveals everything in plain text:
 ```json
-{"username": "alice", "role": "user", "exp": 1234567890}
+{"username": "h123", "role": "user", "exp": 1234567890}
 ```
 
 **If you stored a password or sensitive data in the payload:**
