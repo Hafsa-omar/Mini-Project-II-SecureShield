@@ -114,6 +114,22 @@
   <div class="box info" id="lo-out">Response will appear here...</div>
 </div>
 
+<!-- ═══ 6. TAMPER TEST ════════════════════════════════════════ -->
+<div class="step">
+  <h2>6. Tamper Test (JWT.io)</h2>
+  <p>
+    <strong>How to tamper:</strong><br>
+    1. Login above and copy your token from the yellow box.<br>
+    2. Go to <strong>jwt.io</strong>, paste the token, change <code>"role": "user"</code> to <code>"role": "admin"</code>.<br>
+    3. Copy the new token from jwt.io and paste it below.<br>
+    4. Click Send — the server will reject it because the signature is invalid.
+  </p>
+  <label>Paste tampered token here</label>
+  <input id="tamper-token" placeholder="Paste your tampered JWT token here..." />
+  <button class="red" onclick="doTamper()">Send Tampered Token</button>
+  <div class="box info" id="tamper-out">Should return 401 — Invalid token. Signature check failed.</div>
+</div>
+
 <script>
   const BASE  = "";   // empty = same server, avoids CORS
   let   token = "";
@@ -182,6 +198,12 @@
     setOut("lo-out", data, status);
     token = "";
     updateTokenBar();
+  }
+
+  async function doTamper() {
+    const tok = document.getElementById("tamper-token").value.trim();
+    const { data, status } = await call("DELETE", "/user/1", null, tok);
+    setOut("tamper-out", data, status);
   }
 </script>
 
