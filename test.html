@@ -114,29 +114,29 @@
   <div class="box info" id="lo-out">Response will appear here...</div>
 </div>
 
-<!-- ═══ 5b. ADMIN ACTION TEST ══════════════════════════════════ -->
-<div class="step">
-  <h2>5. Admin Action Test</h2>
-  <p>
-    Login as <strong>admin1</strong> first, then enter a user ID to delete.<br>
-    Admin gets <strong style="color:green">200 Success</strong> — compared to regular user who gets <strong style="color:red">403 Forbidden</strong>.
-  </p>
-  <label>User ID to delete (as Admin)</label>
-  <input id="admin-delete-id" type="number" placeholder="e.g. 2" />
-  <button class="green" onclick="doAdminDelete()">Admin Delete User</button>
-  <div class="box info" id="admin-delete-out">Login as admin1 first, then click.</div>
-</div>
-
 <!-- ═══ 6. TAMPER TEST ════════════════════════════════════════ -->
 <div class="step">
   <h2>6. Tamper Test</h2>
+  <p>This section proves two things:</p>
   <p>
-    This test proves that even if someone changes their role from <strong>user → admin</strong>
-    inside the token, the server will <strong>reject it</strong> because the signature becomes invalid.
+    🔴 <strong>Fake Admin (Tampered Token)</strong> — login as <strong>h123 (user)</strong>,
+    then click the red button. It changes your role to admin inside the token but keeps the
+    old signature. The server <strong>rejects it with 401</strong>.
   </p>
-  <p>Make sure you are logged in as <strong>h123 (user)</strong> first, then click the button below.</p>
-  <button class="red" onclick="doAutoTamper()">Auto Tamper My Token (Change role to admin)</button>
-  <div class="box info" id="tamper-out">Should return 401 — Invalid token. Signature check failed.</div>
+  <button class="red" onclick="doAutoTamper()">Send Tampered Token (Fake Admin)</button>
+  <div class="box info" id="tamper-out">Login as h123 first, then click.</div>
+
+  <br/>
+
+  <p>
+    🟢 <strong>Real Admin (Genuine Token)</strong> — login as <strong>admin1</strong>,
+    enter a user ID, then click the green button. The server <strong>accepts it with 200</strong>
+    because the token was properly signed with the secret key.
+  </p>
+  <label>User ID to delete (as real admin)</label>
+  <input id="admin-delete-id" type="number" placeholder="e.g. 2" />
+  <button class="green" onclick="doAdminDelete()">Send Real Admin Token</button>
+  <div class="box info" id="admin-delete-out">Login as admin1 first, then click.</div>
 </div>
 
 <script>
