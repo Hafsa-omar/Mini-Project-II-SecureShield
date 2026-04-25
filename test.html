@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>SecureShield — API Tester</title>
+  <title>SecureShield — Demo</title>
   <style>
     * { box-sizing: border-box; }
     body {
@@ -13,58 +13,52 @@
       padding: 0 20px;
     }
     h1  { color: #2c3e50; text-align: center; }
-    h2  { color: #34495e; border-left: 4px solid #3498db;
-          padding-left: 10px; margin-top: 35px; }
-    p   { color: #666; font-size: 14px; }
-
+    h2  { color: #34495e; border-left: 4px solid #3498db; padding-left: 10px; }
     label { font-weight: bold; font-size: 13px; color: #333; }
     input, select {
       display: block; width: 100%; padding: 9px 12px;
       margin: 5px 0 14px; border: 1px solid #ccc;
       border-radius: 6px; font-size: 14px;
     }
-
     button {
       padding: 10px 22px; border: none; border-radius: 6px;
       font-size: 14px; cursor: pointer; color: white; margin-top: 4px;
     }
-    .green  { background: #27ae60; }
-    .blue   { background: #2980b9; }
-    .red    { background: #e74c3c; }
+    .green { background: #27ae60; }
+    .blue  { background: #2980b9; }
+    .red   { background: #e74c3c; }
     button:hover { opacity: 0.85; }
-
     .box {
       margin-top: 14px; padding: 14px; border-radius: 6px;
-      font-family: monospace; font-size: 13px;
-      white-space: pre-wrap; word-break: break-all;
+      font-family: monospace; font-size: 13px; white-space: pre-wrap;
     }
     .success { background: #1e272e; color: #2ecc71; }
     .error   { background: #1e272e; color: #e74c3c; }
     .info    { background: #1e272e; color: #f1c40f; }
-
     .token-bar {
       background: #fff3cd; border: 1px solid #f0ad4e;
       padding: 12px; border-radius: 6px;
-      font-size: 12px; word-break: break-all;
-      margin-bottom: 10px;
+      font-size: 12px; word-break: break-all; margin-bottom: 20px;
     }
     .step {
       background: white; border-radius: 8px;
       padding: 20px; margin-bottom: 20px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.08);
     }
+    .note { background: #eaf4fb; border-left: 4px solid #3498db;
+            padding: 10px; border-radius: 4px; font-size: 13px; margin-bottom: 10px; }
   </style>
 </head>
 <body>
 
-<h1>🛡️ SecureShield API Tester</h1>
-<p style="text-align:center">Open this page at <strong>http://127.0.0.1:5000</strong> — not from the file system.</p>
+<h1>🛡️ SecureShield — Live Demo</h1>
 
 <div class="token-bar" id="token-bar">🔑 No token yet — log in first.</div>
 
-<!-- ═══ 1. REGISTER ═══════════════════════════════════════════ -->
+<!-- ══ STEP 1: REGISTER ══════════════════════════════════════ -->
 <div class="step">
-  <h2>1. Register</h2>
+  <h2>Step 1 — Register</h2>
+  <div class="note">Create a regular user and an admin account.</div>
   <label>Username</label>
   <input id="r-user" placeholder="e.g. alice" />
   <label>Password</label>
@@ -78,9 +72,10 @@
   <div class="box info" id="r-out">Response will appear here...</div>
 </div>
 
-<!-- ═══ 2. LOGIN ══════════════════════════════════════════════ -->
+<!-- ══ STEP 2: LOGIN ─ Professor Requirement 1 ═══════════════ -->
 <div class="step">
-  <h2>2. Login</h2>
+  <h2>Step 2 — Login ✅ Requirement 1</h2>
+  <div class="note">Show a user logging in and <strong>receiving a JWT token</strong>.</div>
   <label>Username</label>
   <input id="l-user" placeholder="e.g. alice" />
   <label>Password</label>
@@ -89,71 +84,41 @@
   <div class="box info" id="l-out">Response will appear here...</div>
 </div>
 
-<!-- ═══ 3. PROFILE ════════════════════════════════════════════ -->
+<!-- ══ STEP 3: ACCESS DENIED ─ Professor Requirement 2 ═══════ -->
 <div class="step">
-  <h2>3. View Profile <small>(login required)</small></h2>
-  <p>Uses the token from your last login automatically.</p>
-  <button class="blue" onclick="doProfile()">Get My Profile</button>
-  <div class="box info" id="p-out">Response will appear here...</div>
-</div>
-
-<!-- ═══ 4. DELETE USER ════════════════════════════════════════ -->
-<div class="step">
-  <h2>4. Delete User <small>(admin only)</small></h2>
+  <h2>Step 3 — Access Denied ✅ Requirement 2</h2>
+  <div class="note">Login as a <strong>regular user</strong> first, then click below. The server must return <strong>403 Forbidden</strong>.</div>
   <label>User ID to delete</label>
   <input id="d-id" type="number" placeholder="e.g. 1" />
-  <button class="red" onclick="doDelete()">Delete User</button>
+  <button class="red" onclick="doDelete()">Try to Delete as Regular User → Expect 403</button>
   <div class="box info" id="d-out">Response will appear here...</div>
 </div>
 
-<!-- ═══ 5. LOGOUT ═════════════════════════════════════════════ -->
+<!-- ══ STEP 4: TAMPER TEST ─ Professor Requirement 3 ═══════════ -->
 <div class="step">
-  <h2>5. Logout</h2>
-  <p>Revokes your token so it can't be used again.</p>
-  <button class="red" onclick="doLogout()">Logout</button>
-  <div class="box info" id="lo-out">Response will appear here...</div>
-</div>
-
-<!-- ═══ 6. TAMPER TEST ════════════════════════════════════════ -->
-<div class="step">
-  <h2>6. Tamper Test</h2>
-  <p>This section proves two things:</p>
-  <p>
-    🔴 <strong>Fake Admin (Tampered Token)</strong> — login as <strong>h123 (user)</strong>,
-    then click the red button. It changes your role to admin inside the token but keeps the
-    old signature. The server <strong>rejects it with 401</strong>.
-  </p>
-  <button class="red" onclick="doAutoTamper()">Send Tampered Token (Fake Admin)</button>
-  <div class="box info" id="tamper-out">Login as h123 first, then click.</div>
-
-  <br/>
-
-  <p>
-    🟢 <strong>Real Admin (Genuine Token)</strong> — login as <strong>admin1</strong>,
-    enter a user ID, then click the green button. The server <strong>accepts it with 200</strong>
-    because the token was properly signed with the secret key.
-  </p>
-  <label>User ID to delete (as real admin)</label>
-  <input id="admin-delete-id" type="number" placeholder="e.g. 2" />
-  <button class="green" onclick="doAdminDelete()">Send Real Admin Token</button>
-  <div class="box info" id="admin-delete-out">Login as admin1 first, then click.</div>
+  <h2>Step 4 — Tamper Test ✅ Requirement 3</h2>
+  <div class="note">
+    Login as a <strong>regular user</strong> first, then click below.<br>
+    This button changes your role from <strong>user → admin</strong> inside the token
+    but keeps the original signature — the server will <strong>reject it with 401</strong>
+    because the secret key was not used to re-sign it.
+  </div>
+  <button class="red" onclick="doTamper()">Send Tampered Token (Role changed to Admin)</button>
+  <div class="box info" id="t-out">Response will appear here...</div>
 </div>
 
 <script>
-  const BASE  = "";   // empty = same server, avoids CORS
-  let   token = "";
+  let token = "";
 
   function setOut(id, data, status) {
-    const el  = document.getElementById(id);
-    const ok  = status >= 200 && status < 300;
-    el.className = "box " + (ok ? "success" : "error");
+    const el = document.getElementById(id);
+    el.className = "box " + (status >= 200 && status < 300 ? "success" : "error");
     el.textContent = `Status: ${status}\n${JSON.stringify(data, null, 2)}`;
   }
 
   function updateTokenBar() {
-    const bar = document.getElementById("token-bar");
-    bar.textContent = token
-      ? "🔑 Token saved:\n" + token
+    document.getElementById("token-bar").textContent = token
+      ? "🔑 Token saved: " + token
       : "🔑 No token yet — log in first.";
   }
 
@@ -161,11 +126,7 @@
     const headers = { "Content-Type": "application/json" };
     if (tok) headers["Authorization"] = "Bearer " + tok;
     try {
-      const res  = await fetch(BASE + path, {
-        method,
-        headers,
-        body: body ? JSON.stringify(body) : undefined
-      });
+      const res  = await fetch(path, { method, headers, body: body ? JSON.stringify(body) : undefined });
       const data = await res.json();
       return { data, status: res.status };
     } catch (err) {
@@ -191,64 +152,26 @@
     setOut("l-out", data, status);
   }
 
-  async function doProfile() {
-    const { data, status } = await call("GET", "/profile", null, token);
-    setOut("p-out", data, status);
-  }
-
   async function doDelete() {
     const id = document.getElementById("d-id").value;
     const { data, status } = await call("DELETE", `/user/${id}`, null, token);
     setOut("d-out", data, status);
   }
 
-  async function doLogout() {
-    const { data, status } = await call("POST", "/logout", null, token);
-    setOut("lo-out", data, status);
-    token = "";
-    updateTokenBar();
-  }
-
-  async function doAdminDelete() {
-    const id = document.getElementById("admin-delete-id").value;
+  async function doTamper() {
     if (!token) {
-      document.getElementById("admin-delete-out").textContent = "Please login as admin1 first!";
+      document.getElementById("t-out").textContent = "Please login as a regular user first!";
       return;
     }
-    const { data, status } = await call("DELETE", `/user/${id}`, null, token);
-    setOut("admin-delete-out", data, status);
-  }
-
-  async function doAutoTamper() {
-    if (!token) {
-      document.getElementById("tamper-out").textContent = "Please login as h123 (user) first!";
-      return;
-    }
-
-    // Split token into 3 parts: header . payload . signature
+    // Split token: header . payload . signature
     const parts = token.split(".");
-
-    // Decode the payload (middle part) from Base64
-    const decoded = JSON.parse(atob(parts[1]));
-
-    // Show original role before tampering
-    console.log("Original role:", decoded.role);
-
-    // TAMPER: change role to admin
-    decoded.role = "admin";
-
-    // Re-encode the payload with the fake role
-    const tamperedPayload = btoa(JSON.stringify(decoded)).replace(/=/g, "");
-
-    // Build tampered token — same header + tampered payload + original signature
-    // The signature no longer matches the new payload, so server will reject it
-    const tamperedToken = parts[0] + "." + tamperedPayload + "." + parts[2];
-
-    console.log("Tampered token sent:", tamperedToken);
-
-    // Send the tampered token to the server
-    const { data, status } = await call("DELETE", "/user/1", null, tamperedToken);
-    setOut("tamper-out", data, status);
+    // Decode payload and change role to admin
+    const payload = JSON.parse(atob(parts[1]));
+    payload.role  = "admin";
+    // Re-encode with fake role but keep original signature — server will reject it
+    const tampered = parts[0] + "." + btoa(JSON.stringify(payload)).replace(/=/g, "") + "." + parts[2];
+    const { data, status } = await call("DELETE", "/user/1", null, tampered);
+    setOut("t-out", data, status);
   }
 </script>
 
