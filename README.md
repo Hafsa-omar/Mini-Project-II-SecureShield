@@ -12,6 +12,17 @@ A secure Python Flask API that uses **JWT tokens** and **Role-Based Access Contr
 
 
 
+## Demo Video
+
+▶️ [Watch the Live Demo on YouTube](https://www.youtube.com/watch?v=YOUR_VIDEO_ID)
+
+The demo covers:
+- Successful login and receiving a JWT token
+- A regular user getting **403 Forbidden** when accessing the admin delete route
+- A **tamper test** using jwt.io — editing the role in the token and showing the server rejects it
+
+---
+
 ## What This Project Does
 
 This API simulates a real-world secure backend system where:
