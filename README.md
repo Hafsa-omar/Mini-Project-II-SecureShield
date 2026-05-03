@@ -2,8 +2,6 @@
 
 A secure Python Flask API that uses JWT tokens and Role-Based Access Control (RBAC) to protect routes based on user roles (Admin vs User).
 
----
-
 ## 1. Team Members
 
 - Fadumo Jamal Salad — 210208954
