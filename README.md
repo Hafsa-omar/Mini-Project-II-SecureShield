@@ -14,7 +14,7 @@ A secure Python Flask API that uses **JWT tokens** and **Role-Based Access Contr
 
 ## Demo Video
 
-▶️ [Watch the Live Demo on YouTube](https://www.youtube.com/watch?v=YOUR_VIDEO_ID)
+▶️ [Watch the Live Demo on YouTube](https://youtu.be/HAVHx_pMfBg)
 
 The demo covers:
 - Successful login and receiving a JWT token
