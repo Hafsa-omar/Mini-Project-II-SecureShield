@@ -8,8 +8,6 @@ A secure Python Flask API that uses JWT tokens and Role-Based Access Control (RB
 - Hafsa Omar Ismail Samatar — 210208735
 - Sabreen Elmi Aidarus Gure — 210208856
 
----
-
 ## 2. Demo Video
 
 ▶️ [Watch the Live Demo on YouTube](https://youtu.be/HAVHx_pMfBg)
@@ -18,8 +16,6 @@ The demo covers:
 - Successful login and receiving a JWT token
 - A regular user getting **403 Forbidden** when accessing the admin delete route
 - A tamper test using jwt.io — editing the role in the token and showing the server rejects it
-
----
 
 ## 3. What This Project Does
 
@@ -30,8 +26,6 @@ This API simulates a real-world secure backend system where:
 - Admins can do everything users can, plus delete other users
 - Logged-out tokens are blacklisted so they cannot be reused
 - Every unauthorized access attempt is logged to a file
-
----
 
 ## 4. How to Run
 
@@ -50,8 +44,6 @@ python app.py
 http://127.0.0.1:5000
 ```
 
----
-
 ## 5. API Endpoints
 
 | Method | Route | Who Can Access | Description |
@@ -61,8 +53,6 @@ http://127.0.0.1:5000
 | POST | /logout | Logged-in users | Revoke your token |
 | GET | /profile | User & Admin | View your profile |
 | DELETE | /user/\<id\> | Admin only | Delete a user |
-
----
 
 ## 6. How Each Task Was Implemented
 
@@ -80,8 +70,6 @@ What gets saved in the database looks like this:
 $2b$12$KIxQr2TjNHPbXz1eO3Uf8uVgLmZ9A...  (unreadable)
 ```
 
----
-
 ### Task 2 — JWT Issuance
 
 When a user logs in successfully, the server generates a signed JWT token containing the user's username and role.
@@ -96,8 +84,6 @@ token = jwt.encode(
 
 The token is sent back to the user and must be included in all future requests.
 
----
-
 ### Task 3 — Token Validation
 
 A decorator called `@login_required` is placed above protected routes.
@@ -108,8 +94,6 @@ Authorization: Bearer <your_token_here>
 ```
 
 If the token is missing, expired, or tampered with — the request is rejected with a **401 error**.
-
----
 
 ### Task 4 — Role-Based Routing
 
@@ -123,8 +107,6 @@ If a regular user tries to access the delete route, they get:
 {"error": "Admins only."}  →  403 Forbidden
 ```
 
----
-
 ### Task 5 — Token Revocation (Blacklisting)
 
 Since JWT tokens are stateless, they cannot be truly deleted.
@@ -135,8 +117,6 @@ blacklisted_tokens.add(g.token)
 ```
 
 Any future request using that token is immediately rejected — even if it hasn't expired yet.
-
----
 
 ### Task 6 — Defensive Logging
 
@@ -152,8 +132,6 @@ Example log entries:
 2026-04-25 16:22:49 | 401 REVOKED TOKEN  | Tried: GET /profile
 2026-04-25 16:22:49 | 403 FORBIDDEN      | User='h123' Role='user' | Tried: DELETE /user/1
 ```
-
----
 
 ## 7. Report Questions
 
@@ -174,8 +152,6 @@ Example:
 
 The attacker's Rainbow Table becomes useless because it doesn't have entries for salted combinations.
 `bcrypt` automatically generates a unique salt for every password, making Rainbow Table attacks impossible.
-
----
 
 ### 2. Risks of Storing Sensitive Data Inside a JWT Payload
 
@@ -199,8 +175,6 @@ If you stored a password or sensitive data in the payload:
 **Rule:** Only store non-sensitive identifiers in JWT (username, role, expiry).
 Never store passwords, credit cards, personal data, or secret keys inside a JWT.
 
----
-
 ## 8. Technologies Used
 
 | Library | Purpose |
@@ -209,8 +183,6 @@ Never store passwords, credit cards, personal data, or secret keys inside a JWT.
 | Flask-Bcrypt | Password hashing with bcrypt |
 | PyJWT | Creating and verifying JWT tokens |
 | SQLite | Local database for storing users |
-
----
 
 ## 9. Project Structure
 
