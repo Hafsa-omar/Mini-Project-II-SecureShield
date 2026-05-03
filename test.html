@@ -2,178 +2,244 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>SecureShield — Demo</title>
+  <title>SecureShield Test Page</title>
   <style>
-    * { box-sizing: border-box; }
     body {
       font-family: Arial, sans-serif;
-      max-width: 750px;
-      margin: 30px auto;
-      background: #f0f2f5;
+      background-color: #f9f9f9;
+      max-width: 700px;
+      margin: 40px auto;
       padding: 0 20px;
+      color: #333;
     }
-    h1  { color: #2c3e50; text-align: center; }
-    h2  { color: #34495e; border-left: 4px solid #3498db; padding-left: 10px; }
-    label { font-weight: bold; font-size: 13px; color: #333; }
+
+    h1 {
+      font-size: 24px;
+      margin-bottom: 5px;
+    }
+
+    p.subtitle {
+      color: #666;
+      font-size: 14px;
+      margin-top: 0;
+    }
+
+    hr {
+      border: none;
+      border-top: 1px solid #ddd;
+      margin: 25px 0;
+    }
+
+    h2 {
+      font-size: 17px;
+      margin-bottom: 5px;
+    }
+
+    p.note {
+      font-size: 13px;
+      color: #666;
+      margin: 0 0 10px;
+    }
+
+    label {
+      font-size: 13px;
+      font-weight: bold;
+      display: block;
+      margin-top: 10px;
+    }
+
     input, select {
-      display: block; width: 100%; padding: 9px 12px;
-      margin: 5px 0 14px; border: 1px solid #ccc;
-      border-radius: 6px; font-size: 14px;
+      width: 100%;
+      padding: 8px;
+      margin-top: 4px;
+      margin-bottom: 12px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+      box-sizing: border-box;
     }
+
     button {
-      padding: 10px 22px; border: none; border-radius: 6px;
-      font-size: 14px; cursor: pointer; color: white; margin-top: 4px;
+      padding: 9px 18px;
+      border: none;
+      border-radius: 4px;
+      font-size: 14px;
+      cursor: pointer;
+      color: white;
     }
-    .green { background: #27ae60; }
-    .blue  { background: #2980b9; }
-    .red   { background: #e74c3c; }
-    button:hover { opacity: 0.85; }
-    .box {
-      margin-top: 14px; padding: 14px; border-radius: 6px;
-      font-family: monospace; font-size: 13px; white-space: pre-wrap;
+
+    .btn-green  { background-color: #2ecc71; }
+    .btn-blue   { background-color: #3498db; }
+    .btn-red    { background-color: #e74c3c; }
+    button:hover { opacity: 0.9; }
+
+    .token-box {
+      background: #fffbe6;
+      border: 1px solid #f0c040;
+      padding: 10px;
+      border-radius: 4px;
+      font-size: 12px;
+      word-break: break-all;
+      margin-bottom: 20px;
     }
-    .success { background: #1e272e; color: #2ecc71; }
-    .error   { background: #1e272e; color: #e74c3c; }
-    .info    { background: #1e272e; color: #f1c40f; }
-    .token-bar {
-      background: #fff3cd; border: 1px solid #f0ad4e;
-      padding: 12px; border-radius: 6px;
-      font-size: 12px; word-break: break-all; margin-bottom: 20px;
+
+    .result {
+      margin-top: 10px;
+      padding: 10px;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 13px;
+      white-space: pre-wrap;
+      background: #2d2d2d;
+      color: #f1f1f1;
+      min-height: 40px;
     }
-    .step {
-      background: white; border-radius: 8px;
-      padding: 20px; margin-bottom: 20px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-    }
-    .note { background: #eaf4fb; border-left: 4px solid #3498db;
-            padding: 10px; border-radius: 4px; font-size: 13px; margin-bottom: 10px; }
+
+    .result.ok  { color: #2ecc71; }
+    .result.err { color: #e74c3c; }
   </style>
 </head>
 <body>
 
-<h1>🛡️ SecureShield — Live Demo</h1>
+  <h1>SecureShield — Test Page</h1>
+  <p class="subtitle">Mini Project II &nbsp;|&nbsp; Make sure <code>python app.py</code> is running first.</p>
 
-<div class="token-bar" id="token-bar">🔑 No token yet — log in first.</div>
+  <div class="token-box" id="token-box">No token yet. Please log in first.</div>
 
-<!-- ══ STEP 1: REGISTER ══════════════════════════════════════ -->
-<div class="step">
-  <h2>Step 1 — Register</h2>
-  <div class="note">Create a regular user and an admin account.</div>
+  <hr>
+
+  <!-- REGISTER -->
+  <h2>1. Register a User</h2>
+  <p class="note">Create a new account. Pick either "user" or "admin" as the role.</p>
+
   <label>Username</label>
-  <input id="r-user" placeholder="e.g. alice" />
+  <input id="r-user" placeholder="e.g. h123" />
+
   <label>Password</label>
-  <input id="r-pass" type="password" placeholder="e.g. pass123" />
+  <input id="r-pass" type="password" placeholder="e.g. 12356" />
+
   <label>Role</label>
   <select id="r-role">
     <option value="user">user</option>
     <option value="admin">admin</option>
   </select>
-  <button class="green" onclick="doRegister()">Register</button>
-  <div class="box info" id="r-out">Response will appear here...</div>
-</div>
 
-<!-- ══ STEP 2: LOGIN ─ Professor Requirement 1 ═══════════════ -->
-<div class="step">
-  <h2>Step 2 — Login</h2>
-  <div class="note">Show a user logging in and <strong>receiving a JWT token</strong>.</div>
+  <button class="btn-green" onclick="doRegister()">Register</button>
+  <div class="result" id="r-result">waiting...</div>
+
+  <hr>
+
+  <!-- LOGIN -->
+  <h2>2. Login</h2>
+  <p class="note">Log in to get a JWT token. The token will be saved automatically above.</p>
+
   <label>Username</label>
-  <input id="l-user" placeholder="e.g. alice" />
-  <label>Password</label>
-  <input id="l-pass" type="password" placeholder="e.g. pass123" />
-  <button class="blue" onclick="doLogin()">Login &amp; Get Token</button>
-  <div class="box info" id="l-out">Response will appear here...</div>
-</div>
+  <input id="l-user" placeholder="e.g. h123" />
 
-<!-- ══ STEP 3: ACCESS DENIED ─ Professor Requirement 2 ═══════ -->
-<div class="step">
-  <h2>Step 3 — Access Denied</h2>
-  <div class="note">Login as a <strong>regular user</strong> first, then click below. The server must return <strong>403 Forbidden</strong>.</div>
+  <label>Password</label>
+  <input id="l-pass" type="password" placeholder="e.g. 12356" />
+
+  <button class="btn-blue" onclick="doLogin()">Login</button>
+  <div class="result" id="l-result">waiting...</div>
+
+  <hr>
+
+  <!-- ACCESS DENIED -->
+  <h2>3. Access Denied Test</h2>
+  <p class="note">
+    Log in as <strong>h123 (regular user)</strong> first, then try to delete a user.
+    Should return <strong>403 Forbidden</strong> because only admins can do this.
+  </p>
+
   <label>User ID to delete</label>
   <input id="d-id" type="number" placeholder="e.g. 1" />
-  <button class="red" onclick="doDelete()">Try to Delete as Regular User → Expect 403</button>
-  <div class="box info" id="d-out">Response will appear here...</div>
-</div>
 
-<!-- ══ STEP 4: TAMPER TEST ─ Professor Requirement 3 ═══════════ -->
-<div class="step">
-  <h2>Step 4 — Tamper Test</h2>
-  <div class="note">
-    Login as a <strong>regular user</strong> first, then click below.<br>
-    This button changes your role from <strong>user → admin</strong> inside the token
-    but keeps the original signature — the server will <strong>reject it with 401</strong>
-    because the secret key was not used to re-sign it.
-  </div>
-  <button class="red" onclick="doTamper()">Send Tampered Token (Role changed to Admin)</button>
-  <div class="box info" id="t-out">Response will appear here...</div>
-</div>
+  <button class="btn-red" onclick="doDelete()">Try Delete as Regular User</button>
+  <div class="result" id="d-result">waiting...</div>
 
-<script>
-  let token = "";
+  <hr>
 
-  function setOut(id, data, status) {
-    const el = document.getElementById(id);
-    el.className = "box " + (status >= 200 && status < 300 ? "success" : "error");
-    el.textContent = `Status: ${status}\n${JSON.stringify(data, null, 2)}`;
-  }
+  <!-- TAMPER TEST -->
+  <h2>4. Tamper Test</h2>
+  <p class="note">
+    Log in as <strong>h123</strong> first. This button takes your token and changes
+    the role from "user" to "admin" inside it — but without re-signing it.
+    The server should reject it with <strong>401</strong>.
+  </p>
 
-  function updateTokenBar() {
-    document.getElementById("token-bar").textContent = token
-      ? "🔑 Token saved: " + token
-      : "🔑 No token yet — log in first.";
-  }
+  <button class="btn-red" onclick="doTamper()">Send Tampered Token</button>
+  <div class="result" id="t-result">waiting...</div>
 
-  async function call(method, path, body, tok) {
-    const headers = { "Content-Type": "application/json" };
-    if (tok) headers["Authorization"] = "Bearer " + tok;
-    try {
-      const res  = await fetch(path, { method, headers, body: body ? JSON.stringify(body) : undefined });
-      const data = await res.json();
-      return { data, status: res.status };
-    } catch (err) {
-      return { data: { error: err.message }, status: 0 };
+  <script>
+    let token = "";
+
+    function showResult(id, data, status) {
+      const el = document.getElementById(id);
+      const ok = status >= 200 && status < 300;
+      el.className = "result " + (ok ? "ok" : "err");
+      el.textContent = "Status: " + status + "\n" + JSON.stringify(data, null, 2);
     }
-  }
 
-  async function doRegister() {
-    const { data, status } = await call("POST", "/register", {
-      username: document.getElementById("r-user").value,
-      password: document.getElementById("r-pass").value,
-      role:     document.getElementById("r-role").value
-    });
-    setOut("r-out", data, status);
-  }
-
-  async function doLogin() {
-    const { data, status } = await call("POST", "/login", {
-      username: document.getElementById("l-user").value,
-      password: document.getElementById("l-pass").value
-    });
-    if (data.token) { token = data.token; updateTokenBar(); }
-    setOut("l-out", data, status);
-  }
-
-  async function doDelete() {
-    const id = document.getElementById("d-id").value;
-    const { data, status } = await call("DELETE", `/user/${id}`, null, token);
-    setOut("d-out", data, status);
-  }
-
-  async function doTamper() {
-    if (!token) {
-      document.getElementById("t-out").textContent = "Please login as a regular user first!";
-      return;
+    function updateTokenBox() {
+      const box = document.getElementById("token-box");
+      box.textContent = token
+        ? "Token saved:\n" + token
+        : "No token yet. Please log in first.";
     }
-    // Split token: header . payload . signature
-    const parts = token.split(".");
-    // Decode payload and change role to admin
-    const payload = JSON.parse(atob(parts[1]));
-    payload.role  = "admin";
-    // Re-encode with fake role but keep original signature — server will reject it
-    const tampered = parts[0] + "." + btoa(JSON.stringify(payload)).replace(/=/g, "") + "." + parts[2];
-    const { data, status } = await call("DELETE", "/user/1", null, tampered);
-    setOut("t-out", data, status);
-  }
-</script>
+
+    async function sendRequest(method, path, body, tok) {
+      const headers = { "Content-Type": "application/json" };
+      if (tok) headers["Authorization"] = "Bearer " + tok;
+      try {
+        const res  = await fetch(path, {
+          method,
+          headers,
+          body: body ? JSON.stringify(body) : undefined
+        });
+        const data = await res.json();
+        return { data, status: res.status };
+      } catch (e) {
+        return { data: { error: e.message }, status: 0 };
+      }
+    }
+
+    async function doRegister() {
+      const { data, status } = await sendRequest("POST", "/register", {
+        username: document.getElementById("r-user").value,
+        password: document.getElementById("r-pass").value,
+        role:     document.getElementById("r-role").value
+      });
+      showResult("r-result", data, status);
+    }
+
+    async function doLogin() {
+      const { data, status } = await sendRequest("POST", "/login", {
+        username: document.getElementById("l-user").value,
+        password: document.getElementById("l-pass").value
+      });
+      if (data.token) { token = data.token; updateTokenBox(); }
+      showResult("l-result", data, status);
+    }
+
+    async function doDelete() {
+      const id = document.getElementById("d-id").value;
+      const { data, status } = await sendRequest("DELETE", "/user/" + id, null, token);
+      showResult("d-result", data, status);
+    }
+
+    async function doTamper() {
+      if (!token) {
+        document.getElementById("t-result").textContent = "Please log in as h123 first!";
+        return;
+      }
+      const parts   = token.split(".");
+      const payload = JSON.parse(atob(parts[1]));
+      payload.role  = "admin";
+      const tampered = parts[0] + "." + btoa(JSON.stringify(payload)).replace(/=/g, "") + "." + parts[2];
+      const { data, status } = await sendRequest("DELETE", "/user/1", null, tampered);
+      showResult("t-result", data, status);
+    }
+  </script>
 
 </body>
 </html>
